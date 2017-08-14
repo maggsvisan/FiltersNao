@@ -12,6 +12,12 @@ lenContRed=0
 lenContBrown=0
 
 def contoursFilter():
+  
+  ##-----Threshold Filter-------------##
+  ret,thresh = cv2.threshold(img,127,255,0)
+  ##-----Find contours-------------##
+  im,contours,hierarchy = cv2.findContours(thresh, 1, 2)
+
   j=0 
   for cnt in contours:  ##-----Iterate all contours-------------##
      #cnt = contours[i]
@@ -58,11 +64,6 @@ def redFilter(hsv):
   dilation2 = cv2.dilate(dilation,kernel, iterations =1) 
   dilation3 = cv2.dilate(dilation2,kernel, iterations =1)
 
-  ##-----Threshold Filter-------------##
-  ret,thresh = cv2.threshold(img,127,255,0)
-  ##-----Find contours-------------##
-  im,contours,hierarchy = cv2.findContours(thresh, 1, 2)
-
   contRed= contoursFilter()
   
   lenContRed= len(contRed)
@@ -70,7 +71,7 @@ def redFilter(hsv):
   if (lenContRed >= 1):
     redColor=True
 
-  else 
+  else: 
     redColor=False
 
 
@@ -89,11 +90,6 @@ def brownFilter(hsv):
   dilation2 = cv2.dilate(dilation,kernel, iterations =1) 
   dilation3 = cv2.dilate(dilation2,kernel, iterations =1)
 
-  ##-----Threshold Filter-------------##
-  ret,thresh = cv2.threshold(img,127,255,0)
-  ##-----Find contours-------------##
-  im,contours,hierarchy = cv2.findContours(thresh, 1, 2)
-
   contBrown= contoursFilter()
   
   lenContBrown= len(contBrown)
@@ -101,7 +97,7 @@ def brownFilter(hsv):
   if (lenContBrown >= 1):
     brownColor=True
 
-  else 
+  else: 
     brownColor=False
 
 
