@@ -46,7 +46,7 @@ def contoursFilter():
 
      j=j+1
 
-return contours
+     return contours
 
 
 def redFilter(hsv):
