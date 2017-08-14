@@ -84,8 +84,8 @@ def redFilter(hsv):
 
 
 def brownFilter(hsv):
-  lower_blue = np.array([20,50,50])
-  upper_blue = np.array([40,255,255])
+  lower_range = np.array([20, 50, 50], dtype=np.uint8) 
+  upper_range = np.array([40, 255, 255], dtype=np.uint8)
 
   mask = cv2.inRange(hsv, lower_range, upper_range)
 
@@ -129,6 +129,9 @@ hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
 red = redFilter(hsv)
 brown =brownFilter(hsv)
+
+print (redColor)
+print (brownColor)
 
 if (red == True):
   print("Red detected")
