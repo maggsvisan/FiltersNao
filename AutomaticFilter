@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-import time
-import serial
 
 camera = cv2.VideoCapture(0) #open camera
 i = 0
@@ -10,6 +8,7 @@ redColor=False
 brownColor= False
 lenContRed=0
 lenContBrown=0
+lenContWhite=0
 
 def contoursFilter():
 
@@ -24,7 +23,7 @@ def contoursFilter():
   i=0
   for cnt in contours:
     M = cv2.moments(cnt)
-    print M
+    #print M
      
     #Find centroid
     m00 = M['m00']
@@ -42,8 +41,8 @@ def contoursFilter():
       #Draw white circle in at centroid in image
       cv2.circle(img, ctr, 30, (255,255,255),5)
 
-    else:
-      print('no mass center in contour'+ str(i))
+    #else:
+      #print('no mass center in contour'+ str(i))
 
     i=i+1
   return contours
@@ -71,7 +70,7 @@ def redFilter(hsv):
     
   lenContRed= len(contRed)
 
-  print("Length Contours: "+str(lenContRed))
+  #print("Length Contours: "+str(lenContRed))
 
   if(lenContRed >= 1):
     return True
@@ -108,6 +107,36 @@ def brownFilter(hsv):
   else:
     return False
 
+def whiteFilter(hsv):
+  lower_range = np.array([0, 0, 140], dtype=np.uint8) #red color
+  upper_range = np.array([0, 255, 255], dtype=np.uint8)
+
+  mask = cv2.inRange(hsv, lower_range, upper_range)
+
+  #Remove noise of the selected mask
+  kernel = np.ones((5,5),np.uint8)
+  erosion = cv2.erode(mask, kernel, iterations=1)
+  erosion2 = cv2.erode(erosion, kernel, iterations=1)
+  erosion3 = cv2.erode(erosion2, kernel, iterations=1)
+  dilation = cv2.dilate(erosion3,kernel, iterations =1)
+  dilation2 = cv2.dilate(dilation,kernel, iterations =1) 
+  dilation3 = cv2.dilate(dilation2,kernel, iterations =1)
+
+  #cv2.imshow('dilation3',dilation3)
+  cv2.imwrite('dilation3.png', dilation3)
+  
+  contWhite= contoursFilter()
+    
+  lenContWhite= len(contWhite)
+
+  #print("Length Contours: "+str(lenContRed))
+
+  if(lenContWhite >= 1):
+    return True
+
+  else:
+    return False
+
 
 while i < 10:               #take 10 pictures to get the good one
     print('take frame'+str(i))
@@ -124,9 +153,8 @@ hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
 redColor = redFilter(hsv)
 
-print (redColor)
-
 if (redColor == True):
+  print(lenContRed)
   print("Red detected")
 
 elif (redColor == False):
@@ -136,10 +164,13 @@ elif (redColor == False):
     print("Brown detected")
 
   elif (brownColor == False):
-    print("no color detected")
+    whiteColor =whiteFilter(hsv)
+    
+    if (whiteColor  == True):
+      print("white detected")
 
-else:
-  print("no color detected")
+    else:
+      print("no color detected")
 
 while(1):
    k = cv2.waitKey(0)
