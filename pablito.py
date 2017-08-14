@@ -13,6 +13,9 @@ lenContBrown=0
 
 def contoursFilter():
   
+  ##-----Read Mask--------------------##
+  img = cv2.imread('dilation3.png',0)
+
   ##-----Threshold Filter-------------##
   ret,thresh = cv2.threshold(img,127,255,0)
   ##-----Find contours-------------##
@@ -64,6 +67,9 @@ def redFilter(hsv):
   dilation2 = cv2.dilate(dilation,kernel, iterations =1) 
   dilation3 = cv2.dilate(dilation2,kernel, iterations =1)
 
+  #cv2.imshow('dilation3',dilation3)
+  cv2.imwrite('dilation3.png', dilation3)
+  
   contRed= contoursFilter()
   
   lenContRed= len(contRed)
@@ -89,6 +95,9 @@ def brownFilter(hsv):
   dilation = cv2.dilate(erosion3,kernel, iterations =1)
   dilation2 = cv2.dilate(dilation,kernel, iterations =1) 
   dilation3 = cv2.dilate(dilation2,kernel, iterations =1)
+
+  #cv2.imshow('dilation3',dilation3)
+  cv2.imwrite('dilation3.png', dilation3)
 
   contBrown= contoursFilter()
   
