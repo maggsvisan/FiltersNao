@@ -128,7 +128,7 @@ img = cv2.imread('nao9.jpg', 1) #take the last image (the good one)
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
 red = redFilter(hsv)
-brown =brownFilter(hsv)
+#brown =brownFilter(hsv)
 
 print (redColor)
 print (brownColor)
@@ -136,8 +136,8 @@ print (brownColor)
 if (red == True):
   print("Red detected")
 
-elif (brown == True):
-  print("Brown detected")
+#elif (brown == True):
+ # print("Brown detected")
 
 else:
   print("no color detected")
