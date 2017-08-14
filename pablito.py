@@ -80,6 +80,8 @@ def redFilter(hsv):
   else: 
     redColor=False
 
+  return redColor
+
 
 def brownFilter(hsv):
   lower_blue = np.array([20,50,50])
@@ -109,6 +111,8 @@ def brownFilter(hsv):
   else: 
     brownColor=False
 
+  return brownColor
+
 
 while i < 10:               #take 10 pictures to get the good one
     print('take frame'+str(i))
@@ -123,13 +127,13 @@ cv2.imshow('nao9',img)
 img = cv2.imread('nao9.jpg', 1) #take the last image (the good one)
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-redFilter(hsv)
-brownFilter(hsv)
+red = redFilter(hsv)
+brown =brownFilter(hsv)
 
-if (redColor == True):
+if (red == True):
   print("Red detected")
 
-elif (brownColor == True):
+elif (brown == True):
   print("Brown detected")
 
 else:
