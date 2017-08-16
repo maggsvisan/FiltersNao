@@ -6,6 +6,7 @@ i = 0
 
 redColor=False
 brownColor= False
+whiteColor=False
 lenContRed=0
 lenContBrown=0
 lenContWhite=0
@@ -19,32 +20,6 @@ def contoursFilter():
   ##-----Find contours-------------##
   im,contours,hierarchy = cv2.findContours(thresh, 1, 2)
 
-  ##-----Iterate all contours-------------##
-  i=0
-  for cnt in contours:
-    M = cv2.moments(cnt)
-    #print M
-     
-    #Find centroid
-    m00 = M['m00']
-    centroid_x, centroid_y = None, None
-    if m00 != 0:
-      centroid_x = int(M['m10']/m00)
-      centroid_y = int(M['m01']/m00)
-
-    # Assume no centroid
-    ctr = (-1,-1)
-
-    # Use centroid if it exists
-    if centroid_x != None and centroid_y != None:
-      ctr = (centroid_x, centroid_y)
-      #Draw white circle in at centroid in image
-      cv2.circle(img, ctr, 30, (255,255,255),5)
-
-    #else:
-      #print('no mass center in contour'+ str(i))
-
-    i=i+1
   return contours
 
 
@@ -67,7 +42,9 @@ def redFilter(hsv):
   cv2.imwrite('dilation3.png', dilation3)
   
   contRed= contoursFilter()
-    
+  
+  global lenContRed
+
   lenContRed= len(contRed)
 
   #print("Length Contours: "+str(lenContRed))
@@ -98,6 +75,8 @@ def brownFilter(hsv):
   cv2.imwrite('dilation3.png', dilation3)
 
   contBrown= contoursFilter()
+
+  global lenContBrown
   
   lenContBrown= len(contBrown)
 
@@ -126,7 +105,8 @@ def whiteFilter(hsv):
   cv2.imwrite('dilation3.png', dilation3)
   
   contWhite= contoursFilter()
-    
+  
+  global lenContWhite
   lenContWhite= len(contWhite)
 
   #print("Length Contours: "+str(lenContRed))
@@ -141,17 +121,24 @@ def whiteFilter(hsv):
 while i < 10:               #take 10 pictures to get the good one
     print('take frame'+str(i))
     return_value, image = camera.read()
-    cv2.imwrite('nao'+str(i)+'.jpg', image)
+    cv2.imwrite('nao_'+str(i)+'.jpg', image)
     i=i+1
 del(camera)
 
-img=cv2.imread('nao9.jpg')  #take the last image (the good one)
-cv2.imshow('nao9',img)
-
-img = cv2.imread('nao9.jpg', 1) #take the last image (the good one)
+img=cv2.imread('nao_9.jpg')  #take the last image (the good one)
+#cv2.imshow('nao9',img)
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-redColor = redFilter(hsv)
+redColor = redFilter(hsv) #return: true/false
+brownColor =brownFilter(hsv)
+whiteColor =whiteFilter(hsv)
+
+l=[lenContWhite, lenContRed, lenContBrown]
+l.sort()
+
+colorDetected= l[2] #poner el nombre del color de la longitud mas larga
+
+print colorDetected
 
 if (redColor == True):
   print(lenContRed)
