@@ -14,7 +14,7 @@ from naoqi import ALProxy
 from naoqi import ALBroker
 from naoqi import ALModule
 import argparse
-
+ 
 # Global variable to store the ReactToTouch module instance
 ReactToTouch = None
 memory = None
